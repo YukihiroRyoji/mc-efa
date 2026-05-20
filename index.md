@@ -29,6 +29,8 @@ remove.packages("simefa")
 （作成中）
 
 # 使用例
-（作成中）
+* [シミュレーション例1](simefaex1.html)
+* シミュレーション例2
+（以下，作成中）
 
 ([Home](https://yukihiroryoji.github.io/))
