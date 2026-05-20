@@ -22,6 +22,7 @@ remove.packages("simefa")
 ```
 
 # 関数
+（作成中）
 
 # 使用例
-
+（作成中）
