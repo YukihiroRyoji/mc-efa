@@ -1,4 +1,4 @@
-([Home](/))
+([Home](https://yukihiroryoji.github.io))
 
 # 概要
 探索的因子分析のモンテカルロシミュレーションを簡便に行うためのRの関数を作成しています。
@@ -29,4 +29,4 @@ remove.packages("simefa")
 # 使用例
 （作成中）
 
-([Home](/))
+([Home](https://yukihiroryoji.github.io/))
