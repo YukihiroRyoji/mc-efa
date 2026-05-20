@@ -9,10 +9,13 @@
 ```r
 install.packages("パス/simefa_0.0.1.0.tar.gz", repos = NULL, type = "source")
 ```
-psych packageを内部で使っていますので，入っていない場合はpsych packageもインストールしておいてください。
+* RStudioを使っている場合，メニューからインストールすることも可能です。
+- Tools -> Install Packages ... -> Install From: で Package Archive File (zip; tar.gz)を選ぶ -> ファイルを選択
+* psych packageを内部で使っていますので，入っていない場合はpsych packageもインストールしておいてください。
 
 ## 削除
 不要になった場合，以下でRの環境から削除することができます。
 ```r
 remove.packages("simefa")
 ```
+
