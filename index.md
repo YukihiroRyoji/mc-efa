@@ -2,12 +2,14 @@
 探索的因子分析のモンテカルロシミュレーションを簡便に行うためのRの関数を作成しています。
 * R packageの形式になっています
 
-## packageのダウンロード
-[ダウンロード](simefa_0.0.1.0.tar.gz)
+# packageのインストール／削除
+## ダウンロード
+[ダウンロードファイル](simefa_0.0.1.0.tar.gz)
+* ファイル名は simefa_0.0.x.y.tar.gz のようになっています。x, yはバージョンによって異なります。
 
 ## インストール
 ```r
-install.packages("パス/simefa_0.0.1.0.tar.gz", repos = NULL, type = "source")
+install.packages("ダウンロードしたファイル名", repos = NULL, type = "source")
 ```
 * RStudioを使っている場合，メニューからインストールすることも可能です。
 - Tools -> Install Packages ... -> Install From: で Package Archive File (zip; tar.gz)を選ぶ -> ファイルを選択
@@ -18,4 +20,8 @@ install.packages("パス/simefa_0.0.1.0.tar.gz", repos = NULL, type = "source")
 ```r
 remove.packages("simefa")
 ```
+
+# 関数
+
+# 使用例
 
