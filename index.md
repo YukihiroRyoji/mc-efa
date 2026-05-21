@@ -30,7 +30,7 @@ remove.packages("simefa")
 * [シミュレーション例2](simefaex2.html)
 * （以下，作成中）
 
-# 関数
+# パッケージに含まれる関数
 各関数のhelpはRの中で表示できます（現在のところ日本語で記述）
 
 ## 因子モデルの表示等
@@ -50,7 +50,7 @@ remove.packages("simefa")
 ## 因子数決定のシミュレーション
 * sim_n_of_factors.parallel ：平行分析で因子数決定のシミュレーションを行う
 
-# summary, plot関数
+## summary, plot関数
 * run_multiple_efa_sim の出力には，summary関数とplot関数があります（シミュレーション例2も参照）
 
 ## その他
