@@ -13,7 +13,7 @@
 
 <meta name="date" content="2026-05-21" />
 
-<title>シミュレーション例 1</title>
+<title>シミュレーション例 2</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -350,14 +350,14 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">シミュレーション例 1</h1>
+<h1 class="title toc-ignore">シミュレーション例 2</h1>
 <h4 class="author">Ryoji Yukiihiro</h4>
 <h4 class="date">2026-05-21</h4>
 
 </div>
 
 
-<p>3因子（4項目，4項目，3項目）構造の因子モデルでシミュレーションを行います。</p>
+<p>この例では，一つの因子モデルに対して，複数のサンプルサイズを指定して，シミュレーション結果を比較します。</p>
 <div id="初期設定" class="section level2">
 <h2>初期設定</h2>
 <p>使用するpackageを読み込みます。
@@ -368,8 +368,7 @@ ddir &lt;- &quot;./simdata&quot;  # シミュレーションのデータ保存�
 </div>
 <div id="因子モデルの定義" class="section level2">
 <h2>因子モデルの定義</h2>
-<p>母集団の因子モデルとして，3因子11項目の因子負荷量行列と，因子間相関行列を指定します。
-factor_model()関数で，因子負荷量，因子間相関，共通性，独自性等がどのように定義されたかを確認しています（これは無くてもその後のシミュレーションには問題ない）。</p>
+<p>母集団の因子モデルとして，3因子11項目の因子負荷量行列と，因子間相関行列を指定します。</p>
 <pre class="r"><code>nfac &lt;- 3  # 因子数
 nvar &lt;- 11 # 変数の数
 fload &lt;- matrix(  # 母集団因子負荷量の定義
@@ -392,130 +391,54 @@ fcor &lt;- matrix(  # 因子間相関の定義
     .5, 1, .4,
     .3, .4, 1), nfac, nfac)
 
-factor_model(fload, fcor) # 共通性，独自性，因子寄与等を確認</code></pre>
-<pre><code>##     Factor1 Factor2 Factor3 h2    u2   
-## y1  0.800   0.000   0.000   0.640 0.360
-## y2  0.700   0.000   0.000   0.490 0.510
-## y3  0.600   0.000   0.000   0.360 0.640
-## y4  0.500   0.000   0.000   0.250 0.750
-## y5  0.000   0.700   0.000   0.490 0.510
-## y6  0.000   0.600   0.000   0.360 0.640
-## y7  0.000   0.500   0.000   0.250 0.750
-## y8  0.000   0.400   0.000   0.160 0.840
-## y9  0.000   0.000   0.600   0.360 0.640
-## y10 0.000   0.000   0.500   0.250 0.750
-## y11 0.000   0.000   0.400   0.160 0.840
-## 
-## Factor Correlations:
-##         Factor1 Factor2 Factor3
-## Factor1 1.000   0.500   0.300  
-## Factor2 0.500   1.000   0.400  
-## Factor3 0.300   0.400   1.000  
-## 
-## Sum of h2(Var explained): 3.77
-## % Var explained: 34.27%</code></pre>
+#factor_model(fload, fcor) # 共通性，独自性，因子寄与等を確認</code></pre>
 </div>
 <div id="シミュレーションの実行" class="section level2">
 <h2>シミュレーションの実行</h2>
-<p>サンプルサイズ200でシミュレーションを実行してみます。
-シミュレーション回数は100回としています。できれば，シミュレーション回数はもっと多い方がよいでしょうが，その分実行時間も長くなります。</p>
-<p>Windows以外では，run_efa_sim()関数で multicore=TRUE
+<p>サンプルサイズを5水準(N=50, 100, 200, 500,
+1000)変化させ，シミュレーションを実行してみます。
+シミュレーション回数は条件ごとに100回としています。できれば，シミュレーション回数はもっと多い方がよいでしょうが，その分実行時間も長くなります。</p>
+<p>Windows以外では，run_multiple_efa_sim()関数で multicore=TRUE
 とオプションを指定すると，CPUの複数コアを使用して並列計算を行いますので計算が速くなります。Mac，Linux，およびWindows環境でもWLS上であれば並列計算が可能です。</p>
-<pre class="r"><code>ss &lt;- 200 # サンプルサイズ
-nrep &lt;- 100 # シミュレーション回数
+<pre class="r"><code>set.seed(123) # 乱数のシードを固定
+# サンプルサイズを複数指定して，シミュレーション結果を比較
 set.seed(123) # 乱数のシードを固定
-datafiles &lt;- gen_efa_data(fload, fcor, ss, nrep, ddir) # 設定した因子モデルから，データを生成する
-simresult1 &lt;- run_efa_sim(fload, fcor, datafiles, rotation=&quot;oblimin&quot;)  # 生成したデータを分析し，結果を集計する</code></pre>
+datafiles &lt;- gen_multiple_efa_data(fload, fcor, ss=c(50,100,200,500,1000), nrep=100, ddir) # サンプルサイズを5水準設定し，因子モデルからデータを生成
+simresult2 &lt;- run_multiple_efa_sim(fload, fcor, datafiles, rotation=&quot;oblimin&quot;) # データを分析し，結果を整理</code></pre>
 <pre><code>## Loading required namespace: GPArotation</code></pre>
-<pre class="r"><code>summary(simresult1) # シミュレーション結果の要約出力</code></pre>
+<pre class="r"><code>summary(simresult2) # シミュレーション結果の要約を出力</code></pre>
 <pre><code>## N of Replications: 100 
-## Sample Size:  200 
+## Sample Size: 50 100 200 500 1000 
 ## 
-## Mean(SD) Congruence Coefficients(K): 0.934 (0.065)
-## Quantile of K:
-##    5%   50%   95% 
-## 0.846 0.947 0.983 
+## Congruence Coefficients(K):
+##      Average    SD    5%   50%   95%
+## 50     0.791 0.119 0.556 0.828 0.928
+## 100    0.881 0.087 0.641 0.905 0.958
+## 200    0.934 0.073 0.856 0.951 0.979
+## 500    0.981 0.013 0.964 0.984 0.991
+## 1000   0.992 0.004 0.986 0.993 0.996
 ## 
-## Mean(SD) Discrepancy(D): 0.109 (0.038)
-## Quantile of D:
-##    5%   50%   95% 
-## 0.066 0.106 0.168 
+## Discrepancies(D):
+##      Average    SD    5%   50%   95%
+## 50     0.215 0.055 0.138 0.202 0.325
+## 100    0.154 0.045 0.101 0.144 0.269
+## 200    0.109 0.040 0.066 0.102 0.165
+## 500    0.060 0.015 0.045 0.057 0.082
+## 1000   0.040 0.008 0.029 0.039 0.055
 ## 
-## Mean(SD) Variability of Factor Solutions(V): 0.105 (0.035)
-## Quantile of V:
-##    5%   50%   95% 
-## 0.064 0.103 0.168 
-## 
-## 
-## [Factor Loadings]
-## 
-## Factor 1:
-##     Population Average SD     5%     50%    95%   
-## y1   0.800      0.789   0.064  0.702  0.785  0.885
-## y2   0.700      0.678   0.096  0.544  0.689  0.796
-## y3   0.600      0.581   0.081  0.465  0.583  0.700
-## y4   0.500      0.498   0.094  0.351  0.501  0.629
-## y5   0.000      0.041   0.064 -0.033  0.027  0.156
-## y6   0.000      0.044   0.080 -0.055  0.019  0.180
-## y7   0.000      0.022   0.086 -0.098  0.023  0.172
-## y8   0.000      0.042   0.097 -0.117  0.036  0.202
-## y9   0.000      0.034   0.067 -0.040  0.007  0.174
-## y10  0.000      0.028   0.087 -0.100  0.015  0.209
-## y11  0.000      0.000   0.075 -0.105 -0.011  0.156
-## 
-## Factor 2:
-##     Population Average SD     5%     50%    95%   
-## y1   0.000      0.025   0.051 -0.046  0.020  0.111
-## y2   0.000      0.020   0.070 -0.077  0.012  0.119
-## y3   0.000      0.016   0.091 -0.134  0.015  0.164
-## y4   0.000      0.016   0.099 -0.136  0.011  0.195
-## y5   0.700      0.674   0.127  0.495  0.683  0.851
-## y6   0.600      0.563   0.134  0.354  0.588  0.734
-## y7   0.500      0.470   0.123  0.252  0.471  0.622
-## y8   0.400      0.375   0.116  0.178  0.364  0.546
-## y9   0.000      0.054   0.096 -0.055  0.014  0.264
-## y10  0.000      0.047   0.097 -0.090  0.021  0.232
-## y11  0.000      0.062   0.116 -0.132  0.058  0.230
-## 
-## Factor 3:
-##     Population Average SD     5%     50%    95%   
-## y1   0.000      0.009   0.050 -0.078  0.008  0.084
-## y2   0.000      0.001   0.120 -0.092  0.013  0.124
-## y3   0.000      0.001   0.095 -0.160  0.012  0.137
-## y4   0.000     -0.019   0.086 -0.161 -0.013  0.105
-## y5   0.000      0.032   0.078 -0.053  0.025  0.155
-## y6   0.000      0.032   0.102 -0.098  0.007  0.177
-## y7   0.000      0.025   0.117 -0.098  0.007  0.207
-## y8   0.000      0.034   0.119 -0.159  0.024  0.238
-## y9   0.600      0.609   0.258  0.233  0.594  0.998
-## y10  0.500      0.458   0.207  0.158  0.460  0.858
-## y11  0.400      0.353   0.171  0.099  0.356  0.627
-## 
-## 
-## [Factor Correlations]
-## 
-## Factor 1 with
-##          Population Average SD    5%    50%   95%  
-## Factor 1 0.500      0.410   0.081 0.279 0.419 0.535
-## Factor 2 0.300      0.210   0.103 0.067 0.208 0.357
-## 
-## Factor 2 with
-##          Population Average SD    5%    50%   95%  
-## Factor 1 0.400      0.227   0.090 0.079 0.236 0.394</code></pre>
-<p>最初に，推定精度に関する要約が出力されます。</p>
-<p>Congruence Coefficients(<span class="math inline">\(K\)</span>)
-は，母集団因子負荷量と因子負荷量の推定値との一致度を評価する統計量です(MacCallum
-et al.,
-1999)。因子ごとの母集団因子負荷ベクトルと標本因子負荷ベクトルのコサイン
-<span class="math display">\[ \phi_k = \frac{\sum_{j=1}^{p} f_{jk(s)}
-f_{jk(t)}}{\sqrt{(\sum_{j=1}^{p} f^2_{jk(s)})(\sum_{j=1}^p
-f^2_{jk(t)})})} \]</span> の<span class="math inline">\(m\)</span>個の因子の平均 <span class="math display">\[ K= \frac{\sum_{k=1}^m \phi_k}{m} \]</span>
-を計算しています。その平均，SD, 5%,50%, 95%分位数を表示しています。</p>
-<p>Discrepancy(<span class="math inline">\(D\)</span>) (萩生田・繁桝,
-1996)</p>
-<p>Variability of Factor Solutions(<span class="math inline">\(V\)</span>) (MacCallum et al., 1999)</p>
-<p>次に，3因子それぞれの因子負荷量，因子間相関係数の，母数，推定値の平均，標準偏差，分位数(5%,
-50%, 95%)が出力されます。</p>
+## Variability of Factor Solutions(V):
+##      Average    SD    5%   50%   95%
+## 50     0.208 0.048 0.147 0.194 0.294
+## 100    0.148 0.040 0.104 0.141 0.252
+## 200    0.106 0.038 0.070 0.097 0.161
+## 500    0.059 0.014 0.045 0.057 0.078
+## 1000   0.039 0.008 0.029 0.038 0.052</code></pre>
+<pre class="r"><code>plot(simresult2) # 一致係数Kをプロット</code></pre>
+<p><img role="img" aria-label src="data:image/png;base64,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" alt width="672" /></p>
+<p><span class="math inline">\(K\)</span>, <span class="math inline">\(D\)</span>, <span class="math inline">\(V\)</span>はシミュレーション例1と同じものです。summaryで要約が出力され，plotで<span class="math inline">\(K\)</span>のプロットが得られます。</p>
+<p>この結果をみると，この因子構造の場合はN=200ではサンプルサイズがやや不足のようです。N=500では<span class="math inline">\(K\)</span>も良い値が得られていますので，N=300,
+400あたりを調べて見る必要がありそうです。</p>
+<p>各因子の項目数が多い場合や，項目の因子負荷量がより大きい場合では，この例より小さなサンプルサイズでも高い<span class="math inline">\(K\)</span>が得られるまずですので，試してもらうとよいでしょう。</p>
 <p>（<a href="/mc-efa/">戻る</a>）</p>
 </div>
 
